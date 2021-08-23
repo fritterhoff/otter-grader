@@ -31,17 +31,6 @@ jobs:
       run: |
         docker version
         docker-compose version
-    
-    - name: Install Postgres
-      run: |
-        sudo apt update
-        sudo apt install postgresql postgresql-contrib libpq-dev
-        sudo cat /var/lib/postgresql/12/main /var/log/postgresql/postgresql-12-main.log || :
-        sudo service postgresql start
-
-    - name: Create Postgres user
-      run: |
-        sudo -u postgres psql -c "create user root createdb password 'root';"
 
     - name: Set Up Conda
       run: |
@@ -50,6 +39,11 @@ jobs:
     - name: Pull Docker images
       run: |
         docker pull gradescope/auto-builds:latest
+
+    - uses: actions/cache@v2
+      with:
+        path: /usr/share/miniconda/pkgs
+        key: ${{ hashFiles('environment.yml') }}-${{ hashFiles('requirements.txt') }}-${{ hashFiles('requirements-test.txt') }}
 
     - name: Install Python and R packages
       run: |
@@ -64,9 +58,7 @@ jobs:
     - name: Install nbconvert dependencies
       run: |
         sudo apt update
-        sudo apt install -y pandoc
-        sudo apt install -y texlive-xetex texlive-fonts-recommended
-        sudo apt install fonts-lmodern
+        sudo apt install -y pandoc texlive-xetex texlive-fonts-recommended fonts-lmodern
 
     - name: Build testing Docker image
       run: |
