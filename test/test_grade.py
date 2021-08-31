@@ -76,16 +76,17 @@ class TestGrade(TestCase):
 
 
     def test_timeout(self):
-        self.assertRaises(grade(
-            path = TEST_FILES_PATH + "timeout/",
-            output_dir = "test/",
-            autograder = TEST_FILES_PATH + "autograder.zip",
-            containers = 5,
-            image = "otter-test",
-            timeout=40,
-            debug=True,
-            verbose = True,
-        ))
+        with self.assertRaises(Exception,"Executing 'test/test-grade/timeout/20s.ipynb' in docker container failed! Exit code: 137"):
+            grade(
+                path=TEST_FILES_PATH + "timeout/",
+                output_dir="test/",
+                autograder=TEST_FILES_PATH + "autograder.zip",
+                containers=5,
+                image="otter-test",
+                timeout=40,
+                debug=True,
+                verbose=True,
+            )
 
     def test_network(self):
         grade(
@@ -104,7 +105,7 @@ class TestGrade(TestCase):
 
         for _, row in df_test.iterrows():
             for test in self.test_points:
-                if row['file'] == 'no_network.ipynb' and 'q2' in test:
+                if row['file'] == 'network.ipynb' and 'q2' in test:
                     self.assertEqual(row[test],0,"{} supposed to fail {} but passed".format(row["file"], test))
                 else:
                     self.assertEqual(row[test], self.test_points[test], "{} supposed to pass {} but failed".format(row["file"], test))
