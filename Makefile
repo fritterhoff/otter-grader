@@ -20,7 +20,7 @@ docker-ci-test:
 	printf "\nRUN cd /tmp && curl -sSL -O https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz && tar zxf docker-${DOCKER_VERSION}.tgz && mv ./docker/docker /usr/local/bin && chmod +x /usr/local/bin/docker && rm -rf /tmp/*" >> test-Dockerfile
 	printf "\nCOPY --from=docker/buildx-bin /buildx /usr/libexec/docker/cli-plugins/docker-buildx" >> test-Dockerfile
 	printf "\nENV PYTHONUNBUFFERED 1" >> test-Dockerfile
-	docker buildx build . -t otter-test -f test-Dockerfile --cache-from=type=gha --cache-to=type=gha,mode=max
+	docker buildx build . --load -t otter-test -f test-Dockerfile --cache-from=type=gha --cache-to=type=gha,mode=max
 	rm test-Dockerfile
 
 tutorial:
