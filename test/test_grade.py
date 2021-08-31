@@ -87,7 +87,7 @@ class TestGrade(TestCase):
                 debug=True,
                 verbose=True,
             )
-        self.assertEqual(e.exception.message,"Executing 'test/test-grade/timeout/20s.ipynb' in docker container failed! Exit code: 137")
+        self.assertEqual(str(e.exception),"Executing 'test/test-grade/timeout/20s.ipynb' in docker container failed! Exit code: 137")
 
     def test_network(self):
         grade(
